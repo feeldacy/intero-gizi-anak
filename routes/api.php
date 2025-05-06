@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Children\AddChildController;
+use App\Http\Controllers\Children\UpdateChildrenData;
 use App\Http\Controllers\Children\MonitoringController as MonitoringChildrenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('monitoring/children')->group(function () {
         Route::post('/create', [AddChildController::class, 'createChildData']);
         Route::get('/', [MonitoringChildrenController::class, 'index']);
+        Route::put('/{id}', [UpdateChildrenData::class, 'updateChildData']);
     });
 });
 
