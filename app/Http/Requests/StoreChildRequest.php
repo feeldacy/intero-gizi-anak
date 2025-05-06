@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Requests;
-use App\Models\UnitPosyandu;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class StoreChildRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +22,10 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unit_id' => 'required|string|exists:unit_posyandu,id',
-            'name'=>'required|string',
-            'email'=>'required|email',
-            'password'=>'required|min:8',
+            'kecamatan_id' => 'required|string|exists:kecamatan,id',
+            'name' => 'required|string',
+            'birth_date' => 'required|date',
+            'gender' => 'required|in:L,P',
         ];
     }
 }

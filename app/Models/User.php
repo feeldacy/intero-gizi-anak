@@ -19,6 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'unit_id',
         'name',
         'email',
         'password',
@@ -47,5 +48,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function posyandu()
+    {
+        return $this->belongsTo(UnitPosyandu::class, 'unit_id', 'id');
     }
 }

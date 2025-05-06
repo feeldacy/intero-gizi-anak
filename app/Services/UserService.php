@@ -21,6 +21,7 @@
         public function storeUserData(array $data)
         {
             return User::create([
+                'unit_id' => $data['unit_id'],
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
