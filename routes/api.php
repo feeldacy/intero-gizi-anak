@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Children\AddChildController;
 use App\Http\Controllers\Children\UpdateChildrenData;
+use App\Http\Controllers\NutritrackAdmin\NutritionRecordController;
 use App\Http\Controllers\Children\MonitoringController as MonitoringChildrenController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HealthmapAdmin\RegisterController as HealthmapAdminRegisterController;
 use App\Http\Controllers\NutritrackAdmin\RegisterController as NutritrackAdminRegisterController;
 
@@ -30,12 +31,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [MonitoringChildrenController::class, 'index']);
         Route::put('/{id}', [UpdateChildrenData::class, 'updateChildData']);
     });
+
+    /**
+     * NutriTrack
+     */
+    Route::prefix('/nutritrack')->group(function () {
+        Route::post('/create', [NutritionRecordController::class, 'store']);
+    });
+
 });
 
 /**
  * Auth
  */
-Route::post('/login', LoginController::class);
+Route::post('/login', LoginController::class)->name('login');
 
 /**
  * Registration
