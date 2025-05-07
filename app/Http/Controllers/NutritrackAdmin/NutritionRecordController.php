@@ -30,27 +30,28 @@ class NutritionRecordController extends Controller
      */
     public function store(StoreNutritionRecordRequest $request)
     {
-        //Check if the authenticated user has the 'nutritrackAdmin' role
-        if (!Auth::user()) {
+        try {
+            //Validate and create the nutrition record
+            $data = $request->validated();
+
+            // Calculate BMI (weight in kg / (height in m)^2)
+            $data['bmi'] = $this->nutritionService->calculateBMI($data['weight_kg'], $data['height_cm']);
+            $data['nutrition_status'] = $this->nutritionService->classifyBMI($data['bmi']);
+
+            // Store the nutrition record
+            $nutritionRecord = $this->nutritionService->storeNutritionRecord($data);
+
             return response()->json([
-                'message' => 'Unauthorized. Only Nutritrack Admins can add nutrition records.'
-            ], 403);
+                'message' => 'Nutrition record created successfully',
+                'data' => $nutritionRecord
+            ], 201);
+        } catch (\Exception $e){
+            return response()->json([
+                'message' => 'Failed to create Nutrition Record',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        //Validate and create the nutrition record
-        $data = $request->validated();
-
-        // Calculate BMI (weight in kg / (height in m)^2)
-        $data['bmi'] = $this->nutritionService->calculateBMI($data['weight_kg'], $data['height_cm']);
-        $data['nutrition_status'] = $this->nutritionService->classifyBMI($data['bmi']);
-
-        // Store the nutrition record
-        $nutritionRecord = $this->nutritionService->storeNutritionRecord($data);
-
-        return response()->json([
-            'message' => 'Nutrition record created successfully',
-            'data' => $nutritionRecord
-        ], 201);
     }
 
     /**

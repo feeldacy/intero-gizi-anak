@@ -11,40 +11,56 @@ use App\Http\Controllers\Children\MonitoringController as MonitoringChildrenCont
 use App\Http\Controllers\HealthmapAdmin\RegisterController as HealthmapAdminRegisterController;
 use App\Http\Controllers\NutritrackAdmin\RegisterController as NutritrackAdminRegisterController;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
     Route::get('/user', function (Request $request) {
         return response()->json([
             'id' => $request->user()->id,
             'name' => $request->user()->name,
             'email' => $request->user()->email,
+            'unit_posyandu' => $request->user()->unit_id,
             'roles' => $request->user()->getRoleNames(),
         ]);
     });
 
-    Route::post('/logout', LogoutController::class);
-
     /**
      * Children
      */
-    Route::prefix('monitoring/children')->group(function () {
+    Route::prefix('monitoring/child-data')->group(function () {
         Route::post('/create', [AddChildController::class, 'createChildData']);
-        Route::get('/', [MonitoringChildrenController::class, 'index']);
-        Route::put('/{id}', [UpdateChildrenData::class, 'updateChildData']);
+        Route::put('/update/{id}', [UpdateChildrenData::class, 'updateChildData']);
     });
 
     /**
      * NutriTrack
      */
-    Route::prefix('/nutrition-record')->group(function () {
+    Route::prefix('/nutritrack/nutrition-record')->group(function () {
         Route::post('/create', [NutritionRecordController::class, 'store']);
     });
 
 });
 
+
+
+Route::middleware(['auth:sanctum', 'role:nutritrackAdmin|healthmapAdmin'])->group(function(){
+    /**
+     * Read Data
+     */
+    Route::get('/monitoring/child-data/get', [MonitoringChildrenController::class, 'index']);
+
+
+    /**
+     * Logout
+     */
+    Route::post('/logout', LogoutController::class);
+
+});
+
+
 /**
  * Auth
  */
 Route::post('/login', LoginController::class)->name('login');
+
 
 /**
  * Registration
@@ -52,33 +68,3 @@ Route::post('/login', LoginController::class)->name('login');
 Route::post('/register/nutritrack/admin', NutritrackAdminRegisterController::class);
 Route::post('/register/healthmap/admin', HealthmapAdminRegisterController::class);
 
-
-
-
-
-
-
-
-
-
-
-
-// Route::get('/user', function (Request $request) {
-//     $user = $request->user();
-
-//     return response()->json([
-//         'id' => $user->id,
-//         'name' => $user->name,
-//         'email' => $user->email,
-//         'roles' => $user->getRoleNames()
-//     ]);
-// })->middleware('auth:sanctum');
-
-// Route::post('/register/nutritrack/admin', NutritrackAdminRegisterController::class);
-// Route::post('/register/healthmap/admin', HealthmapAdminRegisterController::class);
-
-// Route::post('/login', LoginController::class);
-// Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
-
-// Route::post('/monitoring/children/create', [AddChildController::class, 'createChildData'])->middleware('auth:sanctum');
-// Route::get('/monitoring/children', [MonitoringChildrenController::class, 'index'])->middleware('auth:sanctum');

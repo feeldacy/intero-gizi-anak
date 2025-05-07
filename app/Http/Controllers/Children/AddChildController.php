@@ -11,14 +11,22 @@ class AddChildController extends Controller
 {
     public function createChildData(StoreChildRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $child = Children::create($validated);
+            $child = Children::create($validated);
 
-        return response()->json([
-            'message' => 'Child data created successfully',
-            'data' => $child
-        ], 201);
+            return response()->json([
+                'message' => 'Child data created successfully',
+                'data' => $child
+            ], 201);
+        } catch (\Exception $e){
+            return response()->json([
+                'message' => 'Failed to create Child Data',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
 
