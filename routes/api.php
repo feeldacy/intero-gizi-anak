@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * NutriTrack
      */
-    Route::prefix('/nutritrack')->group(function () {
+    Route::prefix('/nutrition-record')->group(function () {
         Route::post('/create', [NutritionRecordController::class, 'store']);
     });
 

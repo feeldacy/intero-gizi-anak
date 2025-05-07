@@ -5,12 +5,18 @@ namespace App\Http\Controllers\NutritrackAdmin;
 use App\Models\NutritionRecord;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NutritionRecordService;
 use App\Http\Requests\StoreNutritionRecordRequest;
 use App\Http\Requests\UpdateNutritionRecordRequest;
-use Illuminate\Contracts\Cache\Store;
 
 class NutritionRecordController extends Controller
 {
+    protected NutritionRecordService $nutritionService;
+
+    public function __construct(NutritionRecordService $nutritionService){
+        $this->nutritionService = $nutritionService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -35,14 +41,11 @@ class NutritionRecordController extends Controller
         $data = $request->validated();
 
         // Calculate BMI (weight in kg / (height in m)^2)
-        $heightInMeters = $data['height_cm'] / 100; // Convert height from cm to meters
-        $bmi = $data['weight_kg'] / ($heightInMeters * $heightInMeters);
+        $data['bmi'] = $this->nutritionService->calculateBMI($data['weight_kg'], $data['height_cm']);
+        $data['nutrition_status'] = $this->nutritionService->classifyBMI($data['bmi']);
 
-        // Add the calculated BMI to the validated data
-        $data['bmi'] = round($bmi, 2); // Round BMI to 2 decimal places
-
-
-        $nutritionRecord = NutritionRecord::create($data);
+        // Store the nutrition record
+        $nutritionRecord = $this->nutritionService->storeNutritionRecord($data);
 
         return response()->json([
             'message' => 'Nutrition record created successfully',
