@@ -22,15 +22,24 @@ class RegisterController extends Controller
 
     public function __invoke(StoreUserRequest $request)
     {
-        $registerUserData = $request->validated();
+        try {
+            $registerUserData = $request->validated();
 
-        $user = $this->userService->storeUserData($registerUserData);
+            $user = $this->userService->storeNutritrackAdminData($registerUserData);
 
-        $user->assignRole('nutritrackAdmin');
+            $user->assignRole('nutritrackAdmin');
 
-        return response()->json([
-            'message' => 'Admin Nutritrack Created ',
-            'status' => 'Success'
-        ], 200);
+            return response()->json([
+                'message' => 'Admin Nutritrack Created',
+                'status' => 'Success'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create Nutritrack Admin',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

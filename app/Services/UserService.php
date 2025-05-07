@@ -18,10 +18,20 @@
 
     class UserService
     {
-        public function storeUserData(array $data)
+        public function storeNutritrackAdminData(array $data)
         {
             return User::create([
                 'unit_id' => $data['unit_id'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+        }
+
+        public function storeHealthmapAdminData(array $data)
+        {
+            return User::create([
+                'unit_id' => $data['unit_id'], // need to be fix
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),

@@ -22,15 +22,24 @@ class RegisterController extends Controller
 
     public function __invoke(StoreUserRequest $request)
     {
-        $registerUserData = $request->validated();
+        try {
+            $registerUserData = $request->validated();
 
-        $user = $this->userService->storeUserData($registerUserData);
+            $user = $this->userService->storeHealthmapAdminData($registerUserData);
 
-        $user->assignRole('healthmapAdmin');
+            $user->assignRole('healthmapAdmin');
 
-        return response()->json([
-            'message' => 'Healthmap Admin Created ',
-            'status' => 'Success'
-        ], 200);
+            return response()->json([
+                'message' => 'Admin Healthmap Created',
+                'status' => 'Success'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create Healthmap Admin',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

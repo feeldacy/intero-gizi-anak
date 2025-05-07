@@ -35,7 +35,6 @@ class MonitoringController extends Controller
             $query->where('kecamatan.name', 'LIKE', "%{$kecamatanName}%");
         }
 
-
         $sortBy = $request->get('sort_by', 'created_at');
         $sortOrder = $request->get('sort_order', 'desc');
 

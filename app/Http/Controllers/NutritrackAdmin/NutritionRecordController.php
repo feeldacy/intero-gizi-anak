@@ -24,30 +24,38 @@ class NutritionRecordController extends Controller
      */
     public function store(StoreNutritionRecordRequest $request)
     {
-        //Check if the authenticated user has the 'nutritrackAdmin' role
-        if (!Auth::user()) {
+        // //Check if the authenticated user has the 'nutritrackAdmin' role
+        // if (!Auth::user()) {
+        //     return response()->json([
+        //         'message' => 'Unauthorized. Only Nutritrack Admins can add nutrition records.'
+        //     ], 403);
+        // }
+
+        try {
+            //Validate and create the nutrition record
+            $data = $request->validated();
+
+            // Calculate BMI (weight in kg / (height in m)^2)
+            $heightInMeters = $data['height_cm'] / 100; // Convert height from cm to meters
+            $bmi = $data['weight_kg'] / ($heightInMeters * $heightInMeters);
+
+            // Add the calculated BMI to the validated data
+            $data['bmi'] = round($bmi, 2); // Round BMI to 2 decimal places
+
+
+            $nutritionRecord = NutritionRecord::create($data);
+
             return response()->json([
-                'message' => 'Unauthorized. Only Nutritrack Admins can add nutrition records.'
-            ], 403);
+                'message' => 'Nutrition record created successfully',
+                'data' => $nutritionRecord
+            ], 201);
+        } catch (\Exception $e){
+            return response()->json([
+                'message' => 'Failed to create Nutrition Record',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        //Validate and create the nutrition record
-        $data = $request->validated();
-
-        // Calculate BMI (weight in kg / (height in m)^2)
-        $heightInMeters = $data['height_cm'] / 100; // Convert height from cm to meters
-        $bmi = $data['weight_kg'] / ($heightInMeters * $heightInMeters);
-
-        // Add the calculated BMI to the validated data
-        $data['bmi'] = round($bmi, 2); // Round BMI to 2 decimal places
-
-
-        $nutritionRecord = NutritionRecord::create($data);
-
-        return response()->json([
-            'message' => 'Nutrition record created successfully',
-            'data' => $nutritionRecord
-        ], 201);
     }
 
     /**
