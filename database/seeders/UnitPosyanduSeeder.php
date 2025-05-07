@@ -35,6 +35,10 @@ class UnitPosyanduSeeder extends Seeder
                 'kecamatan_id' => 'KEC005',
                 'name' => 'Posyandu Berbah',
             ],
+            [
+                'id' => 'DINKES',
+                'name' => 'Dinas Kesehatan'
+            ]
             ];
 
             foreach ($data as $index => $unitPosyandu) {

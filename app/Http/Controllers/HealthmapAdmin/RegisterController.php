@@ -24,6 +24,7 @@ class RegisterController extends Controller
     {
         try {
             $registerUserData = $request->validated();
+            $registerUserData['unit_id'] = 'DINKES';
 
             $user = $this->userService->storeHealthmapAdminData($registerUserData);
 

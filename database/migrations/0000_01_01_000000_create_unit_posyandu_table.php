@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('unit_posyandu', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('kecamatan_id');
+            $table->string('kecamatan_id')->nullable();
             $table->string('name');
             $table->timestamps();
 

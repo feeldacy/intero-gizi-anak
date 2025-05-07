@@ -23,7 +23,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unit_id' => 'required|string|exists:unit_posyandu,id',
+            'unit_id' => 'string|exists:unit_posyandu,id',
             'name'=>'required|string',
             'email'=>'required|email',
             'password'=>'required|min:8',
