@@ -34,7 +34,20 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
      * NutriTrack
      */
     Route::prefix('/nutritrack/nutrition-record')->group(function () {
+        // Create nutrition record
         Route::post('/create', [NutritionRecordController::class, 'store']);
+        
+        // Get latest nutrition records for all children
+        Route::get('/', [NutritionRecordController::class, 'index']);
+        
+        // Get latest nutrition records by Posyandu unit
+        Route::get('/by-posyandu/{unitId}', [NutritionRecordController::class, 'getByPosyanduUnit']);
+        
+        // Get latest nutrition record for a specific child
+        Route::get('/child/{childId}', [NutritionRecordController::class, 'getChildLatestNutrition']);
+        
+        // Get nutrition history for a specific child
+        Route::get('/child-history/{childId}', [NutritionRecordController::class, 'getChildNutritionHistory']);
     });
 
 });

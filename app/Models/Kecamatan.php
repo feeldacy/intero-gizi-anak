@@ -5,36 +5,26 @@ use App\Models\Children;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class Kecamatan extends Model
 {
-    // use HasFactory, Notifiable, HasRoles, HasApiTokens;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    use HasFactory;
 
     protected $table = 'kecamatan';
+    public $incrementing = false; // Karena ID kecamatan bukan autoincrement
+    protected $keyType = 'string'; // Karena ID kecamatan adalah string
+
+    // Jika timestamps tidak digunakan di tabel kecamatan
+    public $timestamps = false;
+
     protected $fillable = [
+        'id', // Tambahkan id di sini jika itu fillable
         'name',
     ];
 
-    protected $guard_name = 'api';
-
-
-    public function posyandu()
-    {
-        return $this->hasOne(UnitPosyandu::class, 'kecamatan_id', 'id');
-    }
-
+    // Tetapkan relasi dengan children
     public function children()
     {
         return $this->hasMany(Children::class, 'kecamatan_id', 'id');
     }
-
 }
