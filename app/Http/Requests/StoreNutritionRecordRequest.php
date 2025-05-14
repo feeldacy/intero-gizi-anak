@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreNutritionRecordRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class StoreNutritionRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'child_id' => 'required|string|exists:children,id',
+            'child_id' => ['required',
+            'string',
+            Rule::exists('children', 'id')->whereNull('deleted_at')],
             'user_id' => 'required|exists:users,id',
             'height_cm' => 'required|numeric|min:0',
             'weight_kg' => 'required|numeric|min:0',
