@@ -8,6 +8,14 @@ class NutritionRecordService{
         return NutritionRecord::create($data);
     }
 
+    public function updateNutritionRecord($nutritionRecord, $data) {
+        if ($nutritionRecord) {
+            $nutritionRecord->update($data);
+            return $nutritionRecord;
+        }
+        return $nutritionRecord;
+    }
+
     public function calculateBMI(float $weight, float $height): float {
         // Convert height from cm to meters
         $heightInMeters = $height / 100;
