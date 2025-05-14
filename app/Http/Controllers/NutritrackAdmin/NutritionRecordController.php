@@ -339,10 +339,74 @@ class NutritionRecordController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified nutrition record from storage.
+     *
+     * @param string $id
+     * @return JsonResponse
      */
-    public function destroy(NutritionRecord $nutritionRecord)
+    public function destroy(string $nutritionRecordId): JsonResponse
     {
-        //
+        try {
+            $record = NutritionRecord::findOrFail($nutritionRecordId);
+
+            $record->delete();
+
+            return response()->json([
+                'message' => 'Nutrition record deleted successfully'
+            ], 200);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Nutrition record not found',
+                'status' => 'Error',
+                'error' => 'The requested nutrition record does not exist'
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete nutrition record',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
+    public function getNutritionSummary(): JsonResponse
+    {
+        try {
+            $allChildren = Children::with(['nutritionRecords' => function ($query) {
+                $query->latest()->take(1);
+            }])->get();
+
+            $giziBuruk = 0;
+            $giziTercukupi = 0;
+
+            foreach ($allChildren as $child) {
+                $latestRecord = $child->nutritionRecords->first();
+
+                if ($latestRecord) {
+                    if ($latestRecord->nutrition_status === 'Berat Badan Kurang (Underweight)') {
+                        $giziBuruk++;
+                    } elseif ($latestRecord->nutrition_status === 'Normal') {
+                        $giziTercukupi++;
+                    }
+                }
+            }
+
+            return response()->json([
+                'message' => 'Nutrition summary retrieved successfully',
+                'data' => [
+                    'Gizi Tercukupi' => ['Jumlah Anak' => $giziTercukupi],
+                    'Gizi Buruk' => ['Jumlah Anak' => $giziBuruk],
+                ]
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve nutrition summary',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

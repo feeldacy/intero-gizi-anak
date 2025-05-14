@@ -51,6 +51,9 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
 
         // Get nutrition history for a specific child
         Route::get('/child-history/{childId}', [NutritionRecordController::class, 'getChildNutritionHistory']);
+
+        // Delete nutrition record
+        Route::delete('/delete/{nutritionRecordId}', [NutritionRecordController::class, 'destroy']);
     });
 
 });
@@ -62,6 +65,15 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin|healthmapAdmin'])->grou
      * Read Data
      */
     Route::get('/monitoring/child-data/get', [MonitoringChildrenController::class, 'index']);
+
+    /**
+     * HealthMap (ini sebenernya bisa diakses nutritrack & healthmap kan yak? kutaruh sini dulu ya, tolong koreksi kalo misal ga tepat)
+     */
+    Route::prefix('/healthmap/nutrition-record')->group(function () {
+
+        // Get summary of nutrition records for pie chart in healthmap dashboard
+        Route::get('/summary', [NutritionRecordController::class, 'getNutritionSummary']);
+    });
 
 
     /**
