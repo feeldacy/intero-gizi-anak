@@ -5,10 +5,11 @@ use App\Models\Kecamatan;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Children extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'children';
     public $incrementing = false;
@@ -26,13 +27,21 @@ class Children extends Model
     {
         static::creating(function ($child) {
             if (!$child->id) {
-                $latest = self::latest('id')->first();
+                $latest = self::withTrashed()->orderBy('id', 'desc')->first();
                 if ($latest) {
                     $number = intval(substr($latest->id, 5)) + 1;
                 } else {
                     $number = 1;
                 }
                 $child->id = 'CHILD' . str_pad($number, 3, '0', STR_PAD_LEFT);
+            }
+        });
+
+        static::deleting(function ($child) {
+            if (!$child->isForceDeleting()) {
+                $child->nutritionRecords()->each(function ($record) {
+                    $record->delete();
+                });
             }
         });
     }

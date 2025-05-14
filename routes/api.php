@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Children\AddChildController;
+use App\Http\Controllers\Children\DeleteChildController;
 use App\Http\Controllers\Children\UpdateChildrenData;
 use App\Http\Controllers\NutritrackAdmin\NutritionRecordController;
 use App\Http\Controllers\Children\MonitoringController as MonitoringChildrenController;
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
     Route::prefix('monitoring/child-data')->group(function () {
         Route::post('/create', [AddChildController::class, 'createChildData']);
         Route::put('/update/{id}', [UpdateChildrenData::class, 'updateChildData']);
+        Route::delete('/delete/{id}', DeleteChildController::class);
     });
 
     /**
