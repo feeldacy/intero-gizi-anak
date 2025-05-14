@@ -13,10 +13,10 @@ class DeleteChildController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(string $id)
+    public function __invoke(string $childId)
     {
         try {
-            $childData = Children::findOrFail($id);
+            $childData = Children::findOrFail($childId);
 
             $childData->delete();
 

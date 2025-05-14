@@ -28,8 +28,8 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
      */
     Route::prefix('monitoring/child-data')->group(function () {
         Route::post('/create', [AddChildController::class, 'createChildData']);
-        Route::put('/update/{id}', [UpdateChildrenData::class, 'updateChildData']);
-        Route::delete('/delete/{id}', DeleteChildController::class);
+        Route::put('/update/{childId}', [UpdateChildrenData::class, 'updateChildData']);
+        Route::delete('/delete/{childId}', DeleteChildController::class);
     });
 
     /**

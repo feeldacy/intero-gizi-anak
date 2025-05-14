@@ -19,10 +19,10 @@ class UpdateChildrenData extends Controller
      * @param string $id
      * @return JsonResponse
      */
-    public function updateChildData(StoreChildRequest $request, string $id): JsonResponse
+    public function updateChildData(StoreChildRequest $request, string $childId): JsonResponse
     {
         try {
-            $child = Children::findOrFail($id);
+            $child = Children::findOrFail($childId);
 
             $validatedData = $request->validated();
             $child->update($validatedData);
