@@ -41,8 +41,13 @@ class UnitPosyanduSeeder extends Seeder
             ]
             ];
 
-            foreach ($data as $index => $unitPosyandu) {
-                $unitPosyandu['id'] = 'UNIT' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
+            $unitCount = 1;
+            foreach ($data as $unitPosyandu) {
+                if (!isset($unitPosyandu['id'])) {
+                    $unitPosyandu['id'] = 'UNIT' . str_pad($unitCount, 3, '0', STR_PAD_LEFT);
+                    $unitCount++;
+                }
+
                 UnitPosyandu::create($unitPosyandu);
             }
     }
