@@ -11,6 +11,7 @@ use App\Http\Controllers\NutritrackAdmin\NutritionRecordController;
 use App\Http\Controllers\Children\MonitoringController as MonitoringChildrenController;
 use App\Http\Controllers\HealthmapAdmin\RegisterController as HealthmapAdminRegisterController;
 use App\Http\Controllers\NutritrackAdmin\RegisterController as NutritrackAdminRegisterController;
+use App\Http\Controllers\HealthmapAdmin\MalnutritionController;
 
 Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -83,6 +84,18 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin|healthmapAdmin'])->grou
      */
     Route::post('/logout', LogoutController::class);
 
+});
+
+// Tambahkan di bagian yang sesuai, misalnya di dalam middleware auth:sanctum dengan role healthmapAdmin
+Route::middleware(['auth:sanctum', 'role:healthmapAdmin'])->group(function(){
+    // Malnutrition data endpoints
+    Route::prefix('/healthmap')->group(function() {
+        // Get latest malnutrition data grouped by posyandu
+        Route::get('/malnutrition', [MalnutritionController::class, 'getLatestMalnutrition']);
+        
+        // Get detailed malnutrition data for a specific posyandu
+        Route::get('/malnutrition/posyandu/{posyanduId}', [MalnutritionController::class, 'getPosyanduMalnutritionDetail']);
+    });
 });
 
 
