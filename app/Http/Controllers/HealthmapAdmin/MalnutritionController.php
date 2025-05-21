@@ -58,7 +58,7 @@ class MalnutritionController extends Controller
                 'message' => 'Latest malnutrition data by posyandu retrieved successfully',
                 'data' => $results
             ], 200);
-            
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve malnutrition data',
@@ -80,11 +80,11 @@ class MalnutritionController extends Controller
         try {
             // Verify posyandu exists
             $posyandu = UnitPosyandu::with('kecamatan')->findOrFail($posyanduId);
-            
+
             // Ambil tanggal terakhir dari catatan nutrisi untuk setiap anak
             $latestNutritionDateSubquery = NutritionRecord::select('child_id', DB::raw('MAX(created_at) as latest_date'))
                 ->groupBy('child_id');
-            
+
             // Query untuk mendapatkan detail anak-anak dengan gizi buruk
             $malnutritionDetails = NutritionRecord::select(
                     'children.id as child_id',
@@ -106,29 +106,29 @@ class MalnutritionController extends Controller
                 ->where('kecamatan.id', $posyandu->kecamatan_id)
                 ->where('nutrition_records.nutrition_status', '!=', 'Normal')
                 ->orderBy('nutrition_records.created_at', 'desc');
-            
+
             // Tambahkan pagination
             $perPage = $request->input('per_page', 10);
             $results = $malnutritionDetails->paginate($perPage);
-            
+
             // Hitung umur untuk setiap anak
             $resultsWithAge = $results->through(function ($item) {
                 // Tambahkan field umur dalam bulan dan tahun
                 $birthDate = Carbon::parse($item->birth_date);
                 $now = Carbon::now();
-                
+
                 $ageInMonths = $birthDate->diffInMonths($now);
                 $years = floor($ageInMonths / 12);
                 $months = $ageInMonths % 12;
-                
+
                 $item->age = [
                     'years' => $years,
                     'months' => $months,
                 ];
-                
+
                 return $item;
             });
-            
+
             return response()->json([
                 'message' => 'Malnutrition details for posyandu retrieved successfully',
                 'posyandu' => [
@@ -144,7 +144,7 @@ class MalnutritionController extends Controller
                 ],
                 'data' => $resultsWithAge
             ], 200);
-            
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Posyandu not found',
@@ -159,4 +159,48 @@ class MalnutritionController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get malnutrition statistics grouped by kecamatan.
+     *
+     * @return JsonResponse
+     */
+    public function getMalnutritionStatsByKecamatan(): JsonResponse
+    {
+        try {
+            $kecamatanData = Kecamatan::with([
+                'children.nutritionRecords' => function ($query) {
+                    $query->latest();
+                }
+            ])->get();
+
+            $results = $kecamatanData->map(function ($kecamatan) {
+                $totalChildren = $kecamatan->children->count();
+
+                $malnourishedChildren = $kecamatan->children->filter(function ($child) {
+                    $latestRecord = $child->nutritionRecords->first();
+                    return $latestRecord && $latestRecord->nutrition_status !== 'Normal';
+                })->count();
+
+                return [
+                    'kecamatan_name' => $kecamatan->name,
+                    'total_children' => $totalChildren,
+                    'malnourished_children' => $malnourishedChildren,
+                ];
+            });
+
+            return response()->json([
+                'message' => 'Malnutrition statistics by kecamatan retrieved successfully',
+                'data' => $results
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve malnutrition statistics',
+                'status' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

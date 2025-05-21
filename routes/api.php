@@ -12,6 +12,7 @@ use App\Http\Controllers\Children\MonitoringController as MonitoringChildrenCont
 use App\Http\Controllers\HealthmapAdmin\RegisterController as HealthmapAdminRegisterController;
 use App\Http\Controllers\NutritrackAdmin\RegisterController as NutritrackAdminRegisterController;
 use App\Http\Controllers\HealthmapAdmin\MalnutritionController;
+use App\Http\Controllers\HealthmapAdmin\DashboardController;
 
 Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -69,14 +70,9 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin|healthmapAdmin'])->grou
      */
     Route::get('/monitoring/child-data/get', [MonitoringChildrenController::class, 'index']);
 
-    /**
-     * HealthMap (ini sebenernya bisa diakses nutritrack & healthmap kan yak? kutaruh sini dulu ya, tolong koreksi kalo misal ga tepat)
-     */
-    Route::prefix('/healthmap/nutrition-record')->group(function () {
+    // Route::prefix('/healthmap/nutrition-record')->group(function () {
 
-        // Get summary of nutrition records for pie chart in healthmap dashboard
-        Route::get('/summary', [NutritionRecordController::class, 'getNutritionSummary']);
-    });
+    // });
 
 
     /**
@@ -92,9 +88,15 @@ Route::middleware(['auth:sanctum', 'role:healthmapAdmin'])->group(function(){
     Route::prefix('/healthmap')->group(function() {
         // Get latest malnutrition data grouped by posyandu
         Route::get('/malnutrition', [MalnutritionController::class, 'getLatestMalnutrition']);
-        
+
         // Get detailed malnutrition data for a specific posyandu
         Route::get('/malnutrition/posyandu/{posyanduId}', [MalnutritionController::class, 'getPosyanduMalnutritionDetail']);
+
+        // Get summary of nutrition records for pie chart in healthmap dashboard
+        Route::get('/nutrition-record/summary', [DashboardController::class, 'getNutritionSummary']);
+
+        // Get sum of child with malnutrition for every kecamatan
+        Route::get('/malnutrition/kecamatan', [MalnutritionController::class, 'getMalnutritionStatsByKecamatan']);
     });
 });
 

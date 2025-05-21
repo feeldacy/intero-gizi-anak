@@ -370,43 +370,5 @@ class NutritionRecordController extends Controller
         }
     }
 
-    public function getNutritionSummary(): JsonResponse
-    {
-        try {
-            $allChildren = Children::with(['nutritionRecords' => function ($query) {
-                $query->latest()->take(1);
-            }])->get();
-
-            $giziBuruk = 0;
-            $giziTercukupi = 0;
-
-            foreach ($allChildren as $child) {
-                $latestRecord = $child->nutritionRecords->first();
-
-                if ($latestRecord) {
-                    if ($latestRecord->nutrition_status === 'Berat Badan Kurang (Underweight)') {
-                        $giziBuruk++;
-                    } elseif ($latestRecord->nutrition_status === 'Normal') {
-                        $giziTercukupi++;
-                    }
-                }
-            }
-
-            return response()->json([
-                'message' => 'Nutrition summary retrieved successfully',
-                'data' => [
-                    'Gizi Tercukupi' => ['Jumlah Anak' => $giziTercukupi],
-                    'Gizi Buruk' => ['Jumlah Anak' => $giziBuruk],
-                ]
-            ], 200);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Failed to retrieve nutrition summary',
-                'status' => 'Error',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
 
 }
