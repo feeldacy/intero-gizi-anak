@@ -14,7 +14,8 @@ use App\Http\Controllers\NutritrackAdmin\RegisterController as NutritrackAdminRe
 use App\Http\Controllers\HealthmapAdmin\MalnutritionController;
 use App\Http\Controllers\HealthmapAdmin\DashboardController;
 
-Route::middleware(['auth:sanctum', 'role:nutritrackAdmin'])->group(function () {
+
+Route::middleware(['auth:sanctum', 'role:nutritrackAdmin|healthmapAdmin'])->group(function () {
     Route::get('/user', function (Request $request) {
         return response()->json([
             'id' => $request->user()->id,
@@ -112,4 +113,6 @@ Route::post('/login', LoginController::class)->name('login');
  */
 Route::post('/register/nutritrack/admin', NutritrackAdminRegisterController::class);
 Route::post('/register/healthmap/admin', HealthmapAdminRegisterController::class);
+
+
 

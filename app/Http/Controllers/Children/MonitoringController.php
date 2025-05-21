@@ -12,22 +12,24 @@ class MonitoringController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        // $query = Children::query()->with('kecamatan');
         $query = Children::query()
-        ->join('kecamatan', 'children.kecamatan_id', '=', 'kecamatan.id')
-        ->select(
-            'children.id',
-            'children.name',
-            'children.birth_date',
-            'children.gender',
-            'children.created_at',
-            'children.updated_at',
-            'kecamatan.name as kecamatan'
-        );
+            ->join('kecamatan', 'children.kecamatan_id', '=', 'kecamatan.id')
+            ->select(
+                'children.id',
+                'children.name',
+                'children.birth_date',
+                'children.gender',
+                'children.created_at',
+                'children.updated_at',
+                'kecamatan.name as kecamatan'
+            );
 
         if ($request->has('search')) {
             $searchTerm = $request->get('search');
-            $query->where('name', 'LIKE', "%{$searchTerm}%");
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('children.name', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('kecamatan.name', 'LIKE', "%{$searchTerm}%");
+            });
         }
 
         if ($request->has('kecamatan_name')) {
@@ -35,8 +37,8 @@ class MonitoringController extends Controller
             $query->where('kecamatan.name', 'LIKE', "%{$kecamatanName}%");
         }
 
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
+        $sortBy = $request->get('sort_by', 'children.created_at');
+        $sortOrder = $request->get('sort_order', 'asc');
 
         if (in_array($sortBy, ['children.name', 'children.birth_date', 'children.created_at']) && in_array($sortOrder, ['asc', 'desc'])) {
             $query->orderBy($sortBy, $sortOrder);
@@ -56,5 +58,6 @@ class MonitoringController extends Controller
             ],
         ], 200);
     }
+
 
 }

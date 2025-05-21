@@ -57,4 +57,6 @@ class Children extends Model
     {
         return $this->hasMany(NutritionRecord::class, 'child_id', 'id');
     }
+
+    
 }
