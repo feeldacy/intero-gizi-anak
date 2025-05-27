@@ -41,9 +41,8 @@ class UpdateChildrenData extends Controller
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
-            ], 422); // 422 Unprocessable Entity untuk error validasi
+            ], 422);
         } catch (Exception $e) {
-            // Tangani error database atau error server lainnya
             return response()->json([
                 'message' => 'An error occurred while updating child data',
                 'error' => $e->getMessage()

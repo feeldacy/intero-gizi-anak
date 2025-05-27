@@ -30,11 +30,12 @@ class RegisterController extends Controller
 
             $user->assignRole('healthmapAdmin');
 
+            $token = $user->createToken($user->name.'-AuthToken')->plainTextToken;
             return response()->json([
                 'message' => 'Admin Healthmap Created',
-                'status' => 'Success'
+                'status' => 'Success',
+                'access_token' => $token,
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to create Healthmap Admin',
