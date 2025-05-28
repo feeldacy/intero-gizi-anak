@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -25,5 +26,19 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Handle failed authorization (Spatie)
+        $exceptions->render(function (AuthorizationException $exception, $request) {
+            return response()->json([
+                'message' => 'You do not have the required permissions to access this resource.',
+                'status' => 'Forbidden',
+            ], 403); // 403 Forbidden
+        });
+
+        // Handle failed authentication (Sanctum)
+        $exceptions->render(function (Illuminate\Auth\AuthenticationException $exception, $request) {
+            return response()->json([
+                'message' => 'You must login to access this resource.',
+                'status' => 'Unauthorized',
+            ], 401); // 401 Unauthorized
+        });
     })->create();

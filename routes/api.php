@@ -30,6 +30,7 @@ Route::middleware(['auth:sanctum', 'role:nutritrackAdmin|healthmapAdmin'])->grou
      * Children
      */
     Route::prefix('monitoring/child-data')->group(function () {
+        Route::get('/show/{childId}', [UpdateChildrenData::class, 'show']);
         Route::post('/create', [AddChildController::class, 'createChildData']);
         Route::put('/update/{childId}', [UpdateChildrenData::class, 'updateChildData']);
         Route::delete('/delete/{childId}', DeleteChildController::class);
