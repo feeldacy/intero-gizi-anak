@@ -4,6 +4,10 @@
 
 Ini adalah RESTful API berbasis Laravel yang digunakan sebagai backend untuk platform **NutriTrack & HealthMap**. API ini menangani proses pendaftaran admin, login/logout, manajemen data anak, pencatatan gizi, dan pemantauan status anak bergizi buruk di berbagai unit Posyandu.
 
+## Tujuan Interoperabilitas
+
+Proyek ini dirancang untuk mendemonstrasikan interoperabilitas antar sistem melalui API RESTful, yang memungkinkan dua layanan utama—**NutriTrack** dan **HealthMap**—berkomunikasi dan bertukar data secara terstandarisasi.
+
 ## Teknologi yang Digunakan
 
 - Laravel 11.0
