@@ -1,66 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# NutriTrack & HealthMap API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Tentang Proyek
 
-## About Laravel
+Ini adalah RESTful API berbasis Laravel yang digunakan sebagai backend untuk platform **NutriTrack & HealthMap**. API ini menangani proses pendaftaran admin, login/logout, manajemen data anak, pencatatan gizi, dan pemantauan status malnutrisi di berbagai unit Posyandu.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Teknologi yang Digunakan
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Laravel 11.0
+- Laravel Sanctum (autentikasi token)
+- Spatie Laravel Permission (role-based access control)
+- MySQL / PostgreSQL (opsional)
+- PHP 8.2
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur Utama
 
-## Learning Laravel
+### Autentikasi & Role
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Login admin (NutriTrack & HealthMap)
+- Logout
+- Registrasi admin berdasarkan peran
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Manajemen Data Anak
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Tambah, ubah, hapus, dan lihat data anak
+- Monitoring data anak berdasarkan unit Posyandu
 
-## Laravel Sponsors
+### NutriTrack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Tambah dan update catatan gizi
+- Lihat riwayat gizi anak
+- Rekap gizi anak dalam satu unit Posyandu
 
-### Premium Partners
+### HealthMap
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Lihat data malnutrisi per Posyandu
+- Ringkasan data gizi (untuk grafik pie chart)
+- Statistik malnutrisi per kecamatan
 
-## Contributing
+## Instalasi & Setup
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# Clone repositori
+git clone https://github.com/feeldacy/intero-gizi-anak.git
+cd intero-gizi-anak
 
-## Code of Conduct
+# Install dependensi
+composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Salin file environment
+cp .env.example .env
 
-## Security Vulnerabilities
+# Generate key dan migrasi database
+php artisan key:generate
+php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Jalankan server lokal
+php artisan serve
+        
+## Role & Hak Akses
 
-## License
+| Role              | Akses Fitur                                     |
+|-------------------|--------------------------------------------------|
+| `nutritrackAdmin` | Login, CRUD catatan gizi, tambah/ubah data anak |
+| `healthmapAdmin`  | Lihat data malnutrisi, statistik gizi           |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Ringkasan Endpoint API
+
+### Autentikasi
+
+- `POST /api/login`
+- `POST /api/logout`
+
+### Registrasi Admin
+
+- `POST /api/register/nutritrack/admin`
+- `POST /api/register/healthmap/admin`
+
+### Data Anak
+
+- `GET    /api/monitoring/child-data/get`
+- `GET    /api/monitoring/child-data/show/{childId}`
+- `POST   /api/monitoring/child-data/create`
+- `PUT    /api/monitoring/child-data/update/{childId}`
+- `DELETE /api/monitoring/child-data/delete/{childId}`
+
+### Catatan Gizi (NutriTrack)
+
+- `GET    /api/nutritrack/nutrition-record/`
+- `GET    /api/nutritrack/nutrition-record/by-posyandu/{unitId}`
+- `GET    /api/nutritrack/nutrition-record/child/{childId}`
+- `GET    /api/nutritrack/nutrition-record/child-history/{childId}`
+- `POST   /api/nutritrack/nutrition-record/create`
+- `POST   /api/nutritrack/nutrition-record/update/{nutritionRecordId}`
+- `DELETE /api/nutritrack/nutrition-record/delete/{nutritionRecordId}`
+
+### HealthMap
+
+- `GET /api/healthmap/malnutrition`
+- `GET /api/healthmap/malnutrition/posyandu/{posyanduId}`
+- `GET /api/healthmap/nutrition-record/summary`
+- `GET /api/healthmap/malnutrition/kecamatan`
+
+## Rencana Pengembangan
+
+- Integrasi upload gambar anak & grafik pertumbuhan
+- Validasi tambahan untuk data gizi
+- Logging dan audit trail
+- Dokumentasi Swagger / Postman
+- Dashboard manajemen user (Admin Superuser)
+
+## Kontribusi
+
+Kontribusi sangat terbuka!  
+Langkah kontribusi:
+
+1. Fork repo ini
+2. Buat branch baru (`git checkout -b fitur-anda`)
+3. Commit perubahan (`git commit -m 'Menambahkan fitur ...'`)
+4. Push ke branch Anda (`git push origin fitur-anda`)
+5. Buat Pull Request
+
+## Lisensi
+
+Proyek ini dilisensikan dengan **MIT License**.
+
+## Kontak
+
+**Teknologi Rekayasa Perangkat Lunak**  
+Departemen Teknik Elektro dan Informatika
+Universitas Gadjah Mada
