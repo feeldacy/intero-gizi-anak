@@ -33,7 +33,7 @@ Ini adalah RESTful API berbasis Laravel yang digunakan sebagai backend untuk pla
 
 ### HealthMap
 
-- Lihat data anak bergizi buruk secara real-time
+- Notifikasi data anak bergizi buruk
 - Ringkasan data gizi anak
 - Statistik data anak bergizi buruk per kecamatan
 
@@ -63,7 +63,7 @@ php artisan serve
 | Role              | Akses Fitur                                     |
 |-------------------|--------------------------------------------------|
 | `nutritrackAdmin` | Login, CRUD catatan gizi, tambah/ubah data anak |
-| `healthmapAdmin`  | Lihat data malnutrisi, statistik gizi           |
+| `healthmapAdmin`  | Notifikasi data anak bergizi buruk, statistik gizi           |
 
 ## Ringkasan Endpoint API
 
