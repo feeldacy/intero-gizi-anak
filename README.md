@@ -33,9 +33,9 @@ Ini adalah RESTful API berbasis Laravel yang digunakan sebagai backend untuk pla
 
 ### HealthMap
 
-- Lihat data malnutrisi per Posyandu
-- Ringkasan data gizi (untuk grafik pie chart)
-- Statistik malnutrisi per kecamatan
+- Lihat data anak bergizi buruk secara real-time
+- Ringkasan data gizi anak
+- Statistik data anak bergizi buruk per kecamatan
 
 ## Instalasi & Setup
 
@@ -56,7 +56,8 @@ php artisan migrate --seed
 
 # Jalankan server lokal
 php artisan serve
-        
+```
+
 ## Role & Hak Akses
 
 | Role              | Akses Fitur                                     |
