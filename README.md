@@ -143,5 +143,7 @@ Kelompok 3, Projek Interoperabilitas Kelas PL4BB
 7. Andika Dwi Prasetya
          
 **Program Studi Teknologi Rekayasa Perangkat Lunak**
+
 **Sekolah Vokasi**
+
 **Universitas Gadjah Mada**
