@@ -142,6 +142,6 @@ Kelompok 3, Projek Interoperabilitas Kelas PL4BB
 6. Dwi Anggara Najwan S        
 7. Andika Dwi Prasetya
          
-**Program Studi Teknologi Rekayasa Perangkat Lunak
-Sekolah Vokasi
-Universitas Gadjah Mada**
+**Program Studi Teknologi Rekayasa Perangkat Lunak**
+**Sekolah Vokasi**
+**Universitas Gadjah Mada**
